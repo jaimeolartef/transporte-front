@@ -75,11 +75,6 @@ public class ClienteController {
     @PostMapping(value = "/cliente/guardar")
     public String crearCliente(@Validated @ModelAttribute("cliente") Cliente cliente, Model model, RedirectAttributes flash, SessionStatus status) {
         String urlCliente = "http://localhost:8080/transporte/guardar-cliente";
-        cliente.setNombre("a");
-        cliente.setTelefono("123");
-        cliente.setDireccion("calle");
-        cliente.setNumDocumento("434343");
-        cliente.setIdTipoDocumento(1);
         RestTemplate restTemplate = new RestTemplate();
         Object[] resultado = restTemplate.postForObject(urlCliente, cliente, Object[].class);
 
