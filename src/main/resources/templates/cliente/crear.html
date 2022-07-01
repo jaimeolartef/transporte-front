@@ -51,28 +51,28 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Número documento</label>
                 <div class="col-sm-6">
-                    <input th:value="${cliente.numDocumento}"
+                    <input th:value="${cliente.numDocumento}" th:field="*{numDocumento}"
                            class="form-control"/>
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Nombre completo</label>
                 <div class="col-sm-6">
-                    <input type="text" th:value="${cliente.nombre}"
+                    <input type="text" th:value="${cliente.nombre}" th:field="*{nombre}"
                            class="form-control"/>
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Dirección</label>
                 <div class="col-sm-6">
-                    <input type="text" th:value="${cliente.direccion}"
+                    <input type="text" th:value="${cliente.direccion}" th:field="*{direccion}"
                            class="form-control"/>
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Telefono</label>
                 <div class="col-sm-6">
-                    <input type="text" th:value="${cliente.telefono}"
+                    <input type="text" th:value="${cliente.telefono}" th:field="*{telefono}"
                            class="form-control"/>
                 </div>
             </div>
