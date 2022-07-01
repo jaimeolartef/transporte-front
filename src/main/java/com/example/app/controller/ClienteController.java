@@ -1,6 +1,7 @@
 package com.example.app.controller;
 
 import com.example.app.dto.Cliente;
+import com.example.app.dto.TipoDocumento;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.swing.text.html.parser.Entity;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -48,9 +50,26 @@ public class ClienteController {
     public String crear(Map<String, Object> model) {
 
         Cliente cliente = new Cliente();
+        cliente.setTipoDocumentos(tipoDocumentos());
         model.put("cliente", cliente);
         model.put("titulo", "Formulario de Cliente");
         return "/cliente/crear";
+    }
+
+    private List<TipoDocumento> tipoDocumentos() {
+        String urlTipoDestino = "http://localhost:8080/transporte/tipo-documentos";
+        RestTemplate restTemplate = new RestTemplate();
+        Object[] resultado = restTemplate.getForObject(urlTipoDestino, Object[].class);
+
+        if (Objects.isNull(resultado)) {
+            return new ArrayList<>();
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<TipoDocumento> tipoDocumentos = mapper.convertValue(
+                resultado,
+                new TypeReference<List<TipoDocumento>>() { });
+        return tipoDocumentos;
     }
 
     @PostMapping(value = "/cliente/guardar")
@@ -62,7 +81,7 @@ public class ClienteController {
         cliente.setNumDocumento("434343");
         cliente.setIdTipoDocumento(1);
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity resultado = restTemplate.postForEntity(urlCliente, cliente, Entity.class);
+        Object[] resultado = restTemplate.postForObject(urlCliente, cliente, Object[].class);
 
         if (Objects.isNull(resultado)) {
             flash.addFlashAttribute("error", "Error al cargar la lista de clientes");

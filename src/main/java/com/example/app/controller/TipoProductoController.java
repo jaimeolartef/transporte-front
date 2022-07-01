@@ -59,7 +59,7 @@ public class TipoProductoController {
     public String crearTipoProducto(@Validated @ModelAttribute("tipoproducto") TipoProducto tipoProducto, Model model, RedirectAttributes flash, SessionStatus status) {
         String urlTipoProducto = "http://localhost:8080/transporte/guardar-tipo-producto";
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity resultado = restTemplate.postForEntity(urlTipoProducto, tipoProducto, TipoProducto.class);
+        Object[] resultado = restTemplate.postForObject(urlTipoProducto, tipoProducto, Object[].class);
 
         if (Objects.isNull(resultado)) {
             flash.addFlashAttribute("error", "Error al cargar la lista de tipo de producto");

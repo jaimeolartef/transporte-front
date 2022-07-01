@@ -93,18 +93,13 @@ public class DestinoController {
     }
 
     @PostMapping(value = "/destino/guardar")
-    public String crearCliente(@Validated @ModelAttribute("cliente") Cliente cliente, Model model, RedirectAttributes flash, SessionStatus status) {
-        String urlDestino = "http://localhost:8080/transporte/guardar-cliente";
-        cliente.setNombre("a");
-        cliente.setTelefono("123");
-        cliente.setDireccion("calle");
-        cliente.setNumDocumento("434343");
-        cliente.setIdTipoDocumento(1);
+    public String crearCliente(@Validated @ModelAttribute("destino") Destino destino, Model model, RedirectAttributes flash, SessionStatus status) {
+        String urlDestino = "http://localhost:8080/transporte/guardar-destino";
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity resultado = restTemplate.postForEntity(urlDestino, cliente, Entity.class);
+        Object[] resultado = restTemplate.postForObject(urlDestino, destino, Object[].class);
 
         if (Objects.isNull(resultado)) {
-            flash.addFlashAttribute("error", "Error al cargar la lista de clientes");
+            flash.addFlashAttribute("error", "Error al guardar el destino");
             return "redirect:/envio";
         }
 
@@ -114,10 +109,10 @@ public class DestinoController {
                 new TypeReference<ResponseEntity>() { });
 
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            flash.addFlashAttribute("success", "El cliente se guardo correctamente");
+            flash.addFlashAttribute("success", "El detino se guardo correctamente");
             status.setComplete();
         }
 
-        return "redirect:/cliente/ver";
+        return "redirect:/destino/ver";
     }
 }

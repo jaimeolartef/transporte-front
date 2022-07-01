@@ -43,9 +43,9 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Tipo documento</label>
                 <div class="col-sm-6">
-                    <input type="text" name="tipodocumento" th:field="*{idTipoDocumento}"
-                           th:value="${cliente.idTipoDocumento}"
-                           class="form-control"/>
+                    <select class="form-control" th:field="*{idTipoDocumento}">
+                        <option th:each="tipoDocumento: ${cliente.tipoDocumentos}" th:value="${tipoDocumento.idTipoDocumento}" th:text="${tipoDocumento.nombre}">
+                    </select>
                 </div>
             </div>
             <div class="form-group row">

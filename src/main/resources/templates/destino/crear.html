@@ -62,7 +62,7 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Ciudad</label>
                 <div class="col-sm-6">
-                    <select class="form-control">
+                    <select class="form-control" th:field="*{idCiudad}">
                         <option th:each="ciudad: ${destino.ciudades}" th:field="*{idCiudad}" th:value="${ciudad.idCiudad}" th:text="${ciudad.nombre}">
                     </select>
                 </div>
@@ -71,8 +71,8 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Tipo destino</label>
                 <div class="col-sm-6">
-                    <select class="form-control">
-                        <option th:each="tipoDestino: ${destino.tipoDestinos}" th:field="*{idTipoDestino}" th:value="${tipoDestino.idTipoDestino}" th:text="${tipoDestino.nombre}">
+                    <select class="form-control" th:field="*{idTipoDestino}">
+                        <option th:each="tipoDestino: ${destino.tipoDestinos}" th:value="${tipoDestino.idTipoDestino}" th:text="${tipoDestino.nombre}">
                     </select>
                 </div>
             </div>
