@@ -25,7 +25,19 @@
     </div>
 </nav>
 
+<div id="i18n_eliminar" style="display: none;">¿Desea eliminar el registro?</div>
+
 <div class="container">
+
+    <div class="alert alert-success" th:if="${success != null}"
+         th:text="${success}"></div>
+    <div class="alert alert-danger" th:if="${error != null}"
+         th:text="${error}"></div>
+    <div class="alert alert-warning" th:if="${warning != null}"
+         th:text="${warning}"></div>
+    <div class="alert alert-info" th:if="${info != null}"
+         th:text="${info}"></div>
+
     <h1 class="text-secondary border border-success border-top-0 border-left-0 border-right-0"
         th:text="${titulo}"></h1>
     <p><a th:href="@{/destino/crear}" class="btn btn-success btn-xs">Crear destino</a></p>
@@ -36,6 +48,7 @@
             <th>Dirección</th>
             <th>Ciudad</th>
             <th>Destino</th>
+            <th>Eliminar</th>
         </tr>
         </thead>
         <tbody>
@@ -44,6 +57,8 @@
             <td th:text="${destino.direccion}"></td>
             <td th:text="${destino.tipoDestino.nombre}"></td>
             <td th:text="${destino.ciudad.nombre}"></td>
+            <td><a class="btn btn-danger btn-xs" th:href="@{'/destino/eliminar/' + ${destino.idDestino}}"
+                   onclick="return confirm(document.getElementById('i18n_eliminar').innerHTML);">Eliminiar</a></td>
         </tr>
         </tbody>
     </table>

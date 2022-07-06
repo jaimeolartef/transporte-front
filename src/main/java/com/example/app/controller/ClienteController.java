@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.support.SessionStatus;
@@ -76,22 +77,29 @@ public class ClienteController {
     public String crearCliente(@Validated @ModelAttribute("cliente") Cliente cliente, Model model, RedirectAttributes flash, SessionStatus status) {
         String urlCliente = "http://localhost:8080/transporte/guardar-cliente";
         RestTemplate restTemplate = new RestTemplate();
-        Object[] resultado = restTemplate.postForObject(urlCliente, cliente, Object[].class);
+        ResponseEntity<String> resultado = restTemplate.postForEntity(urlCliente, cliente, String.class);
 
         if (Objects.isNull(resultado)) {
             flash.addFlashAttribute("error", "Error al cargar la lista de clientes");
             return "redirect:/envio";
         }
 
-        ObjectMapper mapper = new ObjectMapper();
-        ResponseEntity responseEntity = mapper.convertValue(
-                resultado,
-                new TypeReference<ResponseEntity>() { });
-
-        if (responseEntity.getStatusCode().is2xxSuccessful()) {
+        if (resultado.getStatusCode().is2xxSuccessful()) {
             flash.addFlashAttribute("success", "El cliente se guardo correctamente");
             status.setComplete();
         }
+
+        return "redirect:/cliente/ver";
+    }
+
+    @RequestMapping(value = "/cliente/eliminar/{idCliente}")
+    public String eliminarCliente(@PathVariable(value = "idCliente") Integer idCliente, Model model, RedirectAttributes flash, SessionStatus status) {
+        String urlTipoProducto = "http://localhost:8080/transporte/eliminar-cliente/".concat(idCliente.toString());
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.delete(urlTipoProducto);
+
+        flash.addFlashAttribute("success", "El cliente se elimino correctamente");
+        status.setComplete();
 
         return "redirect:/cliente/ver";
     }

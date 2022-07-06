@@ -8,10 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -59,22 +56,29 @@ public class TipoProductoController {
     public String crearTipoProducto(@Validated @ModelAttribute("tipoproducto") TipoProducto tipoProducto, Model model, RedirectAttributes flash, SessionStatus status) {
         String urlTipoProducto = "http://localhost:8080/transporte/guardar-tipo-producto";
         RestTemplate restTemplate = new RestTemplate();
-        Object[] resultado = restTemplate.postForObject(urlTipoProducto, tipoProducto, Object[].class);
+        ResponseEntity<String> resultado = restTemplate.postForEntity(urlTipoProducto, tipoProducto, String.class);
 
         if (Objects.isNull(resultado)) {
             flash.addFlashAttribute("error", "Error al cargar la lista de tipo de producto");
             return "redirect:/tipoproducto/ver";
         }
 
-        ObjectMapper mapper = new ObjectMapper();
-        ResponseEntity responseEntity = mapper.convertValue(
-                resultado,
-                new TypeReference<ResponseEntity>() { });
-
-        if (responseEntity.getStatusCode().is2xxSuccessful()) {
+        if (resultado.getStatusCode().is2xxSuccessful()) {
             flash.addFlashAttribute("success", "El cliente se guardo correctamente");
             status.setComplete();
         }
+
+        return "redirect:/tipoproducto/ver";
+    }
+
+    @RequestMapping(value = "/tipoproducto/eliminar/{idTipoProducto}")
+    public String eliminarTipoProducto(@PathVariable(value = "idTipoProducto") Integer idTipoProducto, Model model, RedirectAttributes flash, SessionStatus status) {
+        String urlTipoProducto = "http://localhost:8080/transporte/eliminar-tipo-producto/".concat(idTipoProducto.toString());
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.delete(urlTipoProducto);
+
+        flash.addFlashAttribute("success", "El tipo producto se elimino correctamente");
+        status.setComplete();
 
         return "redirect:/tipoproducto/ver";
     }

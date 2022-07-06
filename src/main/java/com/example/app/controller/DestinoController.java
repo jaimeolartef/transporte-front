@@ -10,10 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -56,7 +53,7 @@ public class DestinoController {
         destino.setTipoDestinos(tipoDestinos());
         destino.setCiudades(tipoCiudades());
         model.put("destino", destino);
-        model.put("titulo", "Formulario de Cliente");
+        model.put("titulo", "Formulario de Destino");
         return "/destino/crear";
     }
 
@@ -96,22 +93,30 @@ public class DestinoController {
     public String crearCliente(@Validated @ModelAttribute("destino") Destino destino, Model model, RedirectAttributes flash, SessionStatus status) {
         String urlDestino = "http://localhost:8080/transporte/guardar-destino";
         RestTemplate restTemplate = new RestTemplate();
-        Object[] resultado = restTemplate.postForObject(urlDestino, destino, Object[].class);
+        ResponseEntity<String> resultado = restTemplate.postForEntity(urlDestino, destino, String.class);
 
         if (Objects.isNull(resultado)) {
             flash.addFlashAttribute("error", "Error al guardar el destino");
             return "redirect:/envio";
         }
 
-        ObjectMapper mapper = new ObjectMapper();
-        ResponseEntity responseEntity = mapper.convertValue(
-                resultado,
-                new TypeReference<ResponseEntity>() { });
-
-        if (responseEntity.getStatusCode().is2xxSuccessful()) {
+        if (resultado.getStatusCode().is2xxSuccessful()) {
             flash.addFlashAttribute("success", "El detino se guardo correctamente");
             status.setComplete();
         }
+
+        return "redirect:/destino/ver";
+    }
+
+
+    @RequestMapping(value = "/destino/eliminar/{idDestino}")
+    public String eliminarDestino(@PathVariable(value = "idDestino") Integer idDestino, Model model, RedirectAttributes flash, SessionStatus status) {
+        String urlTipoProducto = "http://localhost:8080/transporte/eliminar-destino/".concat(idDestino.toString());
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.delete(urlTipoProducto);
+
+        flash.addFlashAttribute("success", "El destino se elimino correctamente");
+        status.setComplete();
 
         return "redirect:/destino/ver";
     }
