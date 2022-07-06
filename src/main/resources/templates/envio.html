@@ -25,7 +25,19 @@
     </div>
 </nav>
 
+<div id="i18n_eliminar" style="display: none;">¿Desea eliminar el registro?</div>
+
 <div class="container">
+
+    <div class="alert alert-success" th:if="${success != null}"
+         th:text="${success}"></div>
+    <div class="alert alert-danger" th:if="${error != null}"
+         th:text="${error}"></div>
+    <div class="alert alert-warning" th:if="${warning != null}"
+         th:text="${warning}"></div>
+    <div class="alert alert-info" th:if="${info != null}"
+         th:text="${info}"></div>
+
     <h1 class="text-secondary border border-success border-top-0 border-left-0 border-right-0"
             th:text="${titulo}"></h1>
 
@@ -39,8 +51,7 @@
                     <th>Fecha entrega</th>
                     <th>Descuento</th>
                     <th>Total</th>
-                    <th>Ver</th>
-                    <th>eliminar</th>
+                    <th>Eliminar</th>
                 </tr>
             </thead>
         <tbody>
@@ -52,8 +63,8 @@
                 <td th:text="${#dates.format(envio.fechaEntrega, 'dd-MMMM-yyyy')}"></td>
                 <td th:text="${envio.descuento}"></td>
                 <td th:text="${envio.total}"></td>
-                <td><a class="btn btn-primary btn-xs"
-                       th:href="@{'/detalle/' + ${envio.idEnvio}}" >Ver Detalle Envio</a></td>
+                <td><a class="btn btn-danger btn-xs" th:href="@{'/envio/eliminar/' + ${envio.idEnvio}}"
+                       onclick="return confirm(document.getElementById('i18n_eliminar').innerHTML);">Eliminiar</a></td>
             </tr>
         </tbody>
     </table>

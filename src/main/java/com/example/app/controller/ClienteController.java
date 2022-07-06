@@ -94,9 +94,9 @@ public class ClienteController {
 
     @RequestMapping(value = "/cliente/eliminar/{idCliente}")
     public String eliminarCliente(@PathVariable(value = "idCliente") Integer idCliente, Model model, RedirectAttributes flash, SessionStatus status) {
-        String urlTipoProducto = "http://localhost:8080/transporte/eliminar-cliente/".concat(idCliente.toString());
+        String urlCliente = "http://localhost:8080/transporte/eliminar-cliente/".concat(idCliente.toString());
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.delete(urlTipoProducto);
+        restTemplate.delete(urlCliente);
 
         flash.addFlashAttribute("success", "El cliente se elimino correctamente");
         status.setComplete();

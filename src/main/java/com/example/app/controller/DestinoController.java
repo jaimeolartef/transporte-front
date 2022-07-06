@@ -111,9 +111,9 @@ public class DestinoController {
 
     @RequestMapping(value = "/destino/eliminar/{idDestino}")
     public String eliminarDestino(@PathVariable(value = "idDestino") Integer idDestino, Model model, RedirectAttributes flash, SessionStatus status) {
-        String urlTipoProducto = "http://localhost:8080/transporte/eliminar-destino/".concat(idDestino.toString());
+        String urlDestino = "http://localhost:8080/transporte/eliminar-destino/".concat(idDestino.toString());
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.delete(urlTipoProducto);
+        restTemplate.delete(urlDestino);
 
         flash.addFlashAttribute("success", "El destino se elimino correctamente");
         status.setComplete();
